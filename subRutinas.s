@@ -29,8 +29,8 @@ modulo:
 	push {lr}						@ Guardo la direccion de memoria 
 	
 	modulo2:
-		sub r4, r4 ,r2					@ Le resto al resultado anterior el nuevo ingresado por el usuario 
 		cmp r4 ,r2						@ Verifico si aun se puede seguir restando antes de que llegue a un numero menor a r2 
+		subge r4, r4 ,r2					@ Le resto al resultado anterior el nuevo ingresado por el usuario 
 		bge modulo2						@ True -> Sigo con el siclo 
 	mov r1, r4						@ Else -> El resultado de r4 es el residuo, lo muevo a r1 para imprimir 
 	ldr r0 ,=cadenaResultado		@ Formato para el resultado 
