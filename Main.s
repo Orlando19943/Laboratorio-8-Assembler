@@ -63,7 +63,7 @@ inicio:
 		ldr r1,[r1]
 		
 		cmp r1, #0
-		blt valorInvalido
+		blt valorInvalido2
 		
 		push {r1}					@ Pongo el valor que ingreso el usuario en la pila para usarlo en las operaciones 
 		b imprimir					@ Hora de analizar los datos 
@@ -87,6 +87,12 @@ inicio:
 		b pedirComando1				@ El programa sigue 
 
 valorInvalido:
+	bl getchar
+	ldr r0, =cadenaValorError
+	bl printf
+	b pedirValor
+
+valorInvalido2:
 	ldr r0, =cadenaValorError
 	bl printf
 	b pedirValor
