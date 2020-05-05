@@ -24,7 +24,13 @@ inicio:
 		bl scanf	
 		
 		ldr r1 ,= comando			@ Cargo el comando ingresado 
-		ldr r1 ,[r1]
+		add r1, #1
+		ldrb r1 ,[r1]
+		cmp r1, #0
+		bne comandoInvalido
+		
+		ldr r1 ,= comando			@ Cargo el comando ingresado 
+		ldrb r1 ,[r1]
 		
 		cmp r1 , #61				@ Verifico si el caracter es = 
 		beq mostrarResultado		@ True -> Muestro el resultado anterior 
@@ -40,39 +46,7 @@ inicio:
 		push {r1}					@ Else -> Ingreso el caracter a la pila 
 		b pedirValor				@ Pido el valor 
 				
-	pedirComando2: @ Esta etiqueta se ejecuta despues de que el usuario ya ingreso un comando almenos una vez 
-		ldr r0 ,=  cadenaComando 	@ Cargo el mensaje de ingresar un comando 
-		bl printf
-		
-		@ El programa omite por alguna razon el primer scanf, asi que tuve que poner dos -_- 
-		
-		ldr r0, =caracter			@ cargar el formato en el que se guarda el comando 
-		ldr r1,=comando				@ cargar el valor de comando en r1 para guardarlo 
-		bl scanf
-		
-		ldr r0, =caracter			@ cargar el formato en el que se guarda el comando 
-		ldr r1,=comando				@ cargar el valor de comando en r1 para guardarlo 
-		bl scanf
-		
-		@ ------------------------------------------------------------------------------------- 
-		
-		ldr r1 ,= comando			@ Cargo el comando ingresado 
-		ldr r1 ,[r1]
-		
-		cmp r1 , #61				@ Verifico si el caracter es = 
-		beq mostrarResultado		@ True -> Muestro el resultado anterior 
-		cmp r1, #113				@ Verifico si el caracter es q 
-		beq salir					@ True -> El programa termina
-
-		cmp r1, #43					@ Si no es una opeación válida
-		cmpne r1, #42
-		cmpne r1, #77
-		cmpne r1, #80
-		bne comandoInvalido			@ Imprimo que es un error
-		
-		push {r1}					@ Else -> Ingreso el caracter a la pila 
-		b pedirValor				@ Pido el valor 	
-		
+	
 	pedirValor:
 		ldr r0, =cadenaValor		@ cargo el mensaje de pedir valor al usuario
 		bl printf	
@@ -105,12 +79,12 @@ inicio:
 		bleq modulo					@ True -> Saco el residuo de la division del resultado anterior con el nuevo valor 
 		cmp r3, #80					@ Verifico si el caracter es P 
 		bleq potencia				@ True -> Elevo el resultado anterior por la potencia que puso el usuario 
-		b pedirComando2				@ El programa sigue 
+		b pedirComando1				@ El programa sigue 
 		
 	mostrarResultado:
 		pop {r4}					@ Saco el resultado anterior para imprimirlo en la subrutina 
 		bl resultado
-		b pedirComando2				@ El programa sigue 
+		b pedirComando1				@ El programa sigue 
 
 valorInvalido:
 	ldr r0, =cadenaValorError
@@ -137,7 +111,6 @@ salir:
 .data
 .align 2 
 @ Variables a utilizar 
-comando:	.word ''	@ Guarda el comando que ingrese el usuario 
 valor:		.word 0		@ Guarda el numero que ingrese el usuario 
 
 @ Salidas de textos 
@@ -148,7 +121,8 @@ cadenaResultado:		.asciz ">> %d\n"
 cadenaValor:		.asciz "Ingrese un valor: "
 cadenaValorError:		.asciz "Error. Valor invalido! \n"
 cadenaDespedida:		.asciz "Muchas gracias por utilizar la calculadora, que tenga una bonita vida :)\n"
-caracter:				.asciz "%c"
+caracter:				.asciz "%s"
 numero:				.asciz "%d"
 
+comando:	.asciz "  "	@ Guarda el comando que ingrese el usuario 
 
