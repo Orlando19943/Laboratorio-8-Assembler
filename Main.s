@@ -21,7 +21,7 @@ inicio:
 		
 		ldr r0 ,= caracter			@ Cargo el formato del caracter que ingrese el usuario 
 		ldr r1 ,= comando			@ Guardo el valor del caracter que ingrese el usuario 
-		bl scanf		
+		bl scanf	
 		
 		ldr r1 ,= comando			@ Cargo el comando ingresado 
 		ldr r1 ,[r1]
@@ -30,6 +30,13 @@ inicio:
 		beq mostrarResultado		@ True -> Muestro el resultado anterior 
 		cmp r1, #113				@ Verifico si el caracter es q 
 		beq salir					@ True -> El programa termina 
+		
+		cmp r1, #43					@ Si no es una operación válida
+		cmpne r1, #42
+		cmpne r1, #77
+		cmpne r1, #80
+		bne comandoInvalido			@ Imprimo que es un error
+		
 		push {r1}					@ Else -> Ingreso el caracter a la pila 
 		b pedirValor				@ Pido el valor 
 				
@@ -55,7 +62,14 @@ inicio:
 		cmp r1 , #61				@ Verifico si el caracter es = 
 		beq mostrarResultado		@ True -> Muestro el resultado anterior 
 		cmp r1, #113				@ Verifico si el caracter es q 
-		beq salir					@ True -> El programa termina 
+		beq salir					@ True -> El programa termina
+
+		cmp r1, #43					@ Si no es una opeación válida
+		cmpne r1, #42
+		cmpne r1, #77
+		cmpne r1, #80
+		bne comandoInvalido			@ Imprimo que es un error
+		
 		push {r1}					@ Else -> Ingreso el caracter a la pila 
 		b pedirValor				@ Pido el valor 	
 		
@@ -66,6 +80,10 @@ inicio:
 		ldr r0, =numero				@ cargar el formato en el que se guarda el valor 
 		ldr r1,=valor				@ cargar el valor de valor (valga la redundancia) en r1 para guardarlo 
 		bl scanf
+		
+		cmp r0, #0
+		beq valorInvalido
+		
 		
 		ldr r1,=valor				@ Cargo el valor que ingreso el usuario 			
 		ldr r1,[r1]
@@ -88,6 +106,16 @@ inicio:
 		pop {r4}					@ Saco el resultado anterior para imprimirlo en la subrutina 
 		bl resultado
 		b pedirComando2				@ El programa sigue 
+
+valorInvalido:
+	ldr r0, =cadenaValorError
+	bl printf
+	bl pedirValor
+
+comandoInvalido:
+	ldr r0, =cadenaComandoError
+	bl printf
+	bl pedirComando2
 
 salir: 
 	ldr r0 ,= cadenaDespedida		@ Muestro el mensaje de despedida 
