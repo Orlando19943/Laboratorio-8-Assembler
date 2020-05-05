@@ -7,7 +7,7 @@ main:
 
 	stmfd sp!, {lr}	/* SP = R13 link register */
 	/* Mensaje de bienvenida */
-	ldr r0, =cadenaInicio		/* cargar dirección de cadena para imprimir*/
+	ldr r0, = cadenaInicio		/* cargar dirección de cadena para imprimir*/
 	bl printf			/* Muestro el mensaje de bienvenida al usuario */
 	ldr r1 ,=valor		
 	ldr r1 ,[r1]
@@ -75,9 +75,9 @@ inicio:
 		b pedirComando2				/* El programa sigue */
 
 salir: 
-	ldr r1 ,= valor
 	ldr r0 ,= cadenaDespedida		/* Muestro el mensaje de despedida */
-	bl printf
+	bl puts
+	pop {r5}
 	
 	/* salida correcta */
 	mov r0, #0
