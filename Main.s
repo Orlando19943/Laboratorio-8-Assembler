@@ -120,7 +120,7 @@ valorInvalido:
 comandoInvalido:
 	ldr r0, =cadenaComandoError
 	bl printf
-	b pedirComando2
+	b pedirComando1
 
 salir: 
 	ldr r0 ,= cadenaDespedida		@ Muestro el mensaje de despedida 
