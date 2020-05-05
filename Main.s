@@ -87,8 +87,13 @@ inicio:
 		
 		ldr r1,=valor				@ Cargo el valor que ingreso el usuario 			
 		ldr r1,[r1]
+		
+		cmp r1, #0
+		blt valorInvalido
+		
 		push {r1}					@ Pongo el valor que ingreso el usuario en la pila para usarlo en las operaciones 
 		b imprimir					@ Hora de analizar los datos 
+		
 		
 	imprimir:
 		pop {r2,r3,r4}				@ r2 = nuevo numero, r3 = comando, r4 = resultado anterior 
@@ -110,12 +115,12 @@ inicio:
 valorInvalido:
 	ldr r0, =cadenaValorError
 	bl printf
-	bl pedirValor
+	b pedirValor
 
 comandoInvalido:
 	ldr r0, =cadenaComandoError
 	bl printf
-	bl pedirComando2
+	b pedirComando2
 
 salir: 
 	ldr r0 ,= cadenaDespedida		@ Muestro el mensaje de despedida 
